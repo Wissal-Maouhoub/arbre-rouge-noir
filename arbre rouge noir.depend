@@ -1,8 +1,10 @@
 # depslib dependency file v1.0
-1793794768 source:c:\users\hp\desktop\bouziri\arbre rouge noir\main.cpp
+1794563256 source:c:\users\hp\desktop\bouziri\arbre rouge noir\main.cpp
 	<iostream>
 	<vector>
 	<algorithm>
 	<random>
 	<chrono>
+	<iomanip>
+	<map>
 

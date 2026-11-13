@@ -4,6 +4,7 @@
 #include <random>
 #include <chrono>
 #include <iomanip>
+#include <map>
 
 using namespace std;
 using namespace chrono;
@@ -570,7 +571,7 @@ public:
 int main() {
 
     int tailles[] = {
-        100, 1000, 10000, 100000, 1000000,10000000,50000000,100000000
+        100, 1000, 10000, 100000, 1000000,10000000
     };
 
     random_device rd;
@@ -579,18 +580,21 @@ int main() {
     cout << fixed << setprecision(3);
 
     cout << "\n";
-    cout << "============================================================\n";
-    cout << "             ARBRE ROUGE-NOIR - COMPARAISON\n";
-    cout << "============================================================\n";
+    cout << "==============================================================\n";
+    cout << "       COMPARAISON ARBRE ROUGE-NOIR ET MAP\n";
+    cout << "==============================================================\n";
 
     cout << left
-         << setw(15) << "Nombre N"
-         << setw(20) << "Insertion (ms)"
-         << setw(20) << "Recherche (ms)"
-         << setw(20) << "Suppression (ms)"
+         << setw(15) << "N"
+         << setw(20) << "Insertion ARN"
+         << setw(20) << "Recherche ARN"
+         << setw(20) << "Suppression ARN"
+         << setw(20) << "Insertion MAP"
+         << setw(20) << "Recherche MAP"
+         << setw(20) << "Suppression MAP"
          << endl;
 
-    cout << "------------------------------------------------------------\n";
+    cout << "----------------------------------------------------------------------------------------------\n";
 
     for (int n : tailles) {
 
@@ -601,14 +605,17 @@ int main() {
             nombres.push_back(i);
         }
 
-        // Melanger les nombres aleatoirement
+        // Melanger aleatoirement
         shuffle(nombres.begin(), nombres.end(), generateur);
+
+
+        // ======================================
+        // ARBRE ROUGE-NOIR
+        // ======================================
 
         ArbreRougeNoir arbre;
 
-        // ======================================
-        // MESURE DE L'INSERTION
-        // ======================================
+        // INSERTION
 
         auto debutInsertion = high_resolution_clock::now();
 
@@ -618,14 +625,13 @@ int main() {
 
         auto finInsertion = high_resolution_clock::now();
 
-        double tempsInsertion =
+        double tempsInsertionARN =
             duration<double, milli>(
                 finInsertion - debutInsertion
             ).count();
 
-        // ======================================
-        // MESURE DE LA RECHERCHE
-        // ======================================
+
+        // RECHERCHE
 
         auto debutRecherche = high_resolution_clock::now();
 
@@ -635,14 +641,13 @@ int main() {
 
         auto finRecherche = high_resolution_clock::now();
 
-        double tempsRecherche =
+        double tempsRechercheARN =
             duration<double, milli>(
                 finRecherche - debutRecherche
             ).count();
 
-        // ======================================
-        // MESURE DE LA SUPPRESSION
-        // ======================================
+
+        // SUPPRESSION
 
         auto debutSuppression = high_resolution_clock::now();
 
@@ -652,10 +657,65 @@ int main() {
 
         auto finSuppression = high_resolution_clock::now();
 
-        double tempsSuppression =
+        double tempsSuppressionARN =
             duration<double, milli>(
                 finSuppression - debutSuppression
             ).count();
+
+
+        // ======================================
+        // MAP
+        // ======================================
+
+        map<int, int> dictionnaire;
+
+        // INSERTION
+
+        auto debutInsertionMap = high_resolution_clock::now();
+
+        for (int nombre : nombres) {
+            dictionnaire.insert({nombre, nombre});
+        }
+
+        auto finInsertionMap = high_resolution_clock::now();
+
+        double tempsInsertionMap =
+            duration<double, milli>(
+                finInsertionMap - debutInsertionMap
+            ).count();
+
+
+        // RECHERCHE
+
+        auto debutRechercheMap = high_resolution_clock::now();
+
+        for (int nombre : nombres) {
+            dictionnaire.find(nombre);
+        }
+
+        auto finRechercheMap = high_resolution_clock::now();
+
+        double tempsRechercheMap =
+            duration<double, milli>(
+                finRechercheMap - debutRechercheMap
+            ).count();
+
+
+        // SUPPRESSION
+
+        auto debutSuppressionMap = high_resolution_clock::now();
+
+        for (int nombre : nombres) {
+            dictionnaire.erase(nombre);
+        }
+
+        auto finSuppressionMap = high_resolution_clock::now();
+
+        double tempsSuppressionMap =
+            duration<double, milli>(
+                finSuppressionMap - debutSuppressionMap
+            ).count();
+
 
         // ======================================
         // AFFICHAGE DES RESULTATS
@@ -663,12 +723,15 @@ int main() {
 
         cout << left
              << setw(15) << n
-             << setw(20) << tempsInsertion
-             << setw(20) << tempsRecherche
-             << setw(20) << tempsSuppression
+             << setw(20) << tempsInsertionARN
+             << setw(20) << tempsRechercheARN
+             << setw(20) << tempsSuppressionARN
+             << setw(20) << tempsInsertionMap
+             << setw(20) << tempsRechercheMap
+             << setw(20) << tempsSuppressionMap
              << endl;
 
-        cout << "------------------------------------------------------------\n";
+        cout << "----------------------------------------------------------------------------------------------\n";
     }
 
     cout << "\nFin des tests." << endl;
